@@ -1,4 +1,4 @@
-import recur.util.*;
+import recur.*;
 
 import java.util.List;
 import java.util.ArrayList;
