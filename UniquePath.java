@@ -1,12 +1,12 @@
-import static util.GraphFactory.constructDenseDAG;
-import static util.GraphFactory.generateDenseDAG;
-import static util.GraphFactory.generateGraph;
-import static util.GraphFactory.Density;
-import static general.Algorithm1.naivePathGeneration;
-import static general.Algorithm2.lengthDistribution;
-import static general.PathFinder.dagTraversal;
-import static general.PathFinder.uniquePaths;
-import static general.PathFinder.uniquePathsAverageLength;
+import static estimator.util.GraphFactory.constructDenseDAG;
+import static estimator.util.GraphFactory.generateDenseDAG;
+import static estimator.util.GraphFactory.generateGraph;
+import static estimator.util.GraphFactory.Density;
+import static estimator.general.Algorithm1.naivePathGeneration;
+import static estimator.general.Algorithm2.lengthDistribution;
+import static estimator.general.PathFinder.dagTraversal;
+import static estimator.general.PathFinder.uniquePaths;
+import static estimator.general.PathFinder.uniquePathsAverageLength;
 
 import java.awt.Point;
 import java.util.Arrays;
@@ -18,8 +18,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.BufferedWriter;
 
-import util.Graph;
-import util.Node;
+import estimator.util.Graph;
+import estimator.util.Node;
 
 public class UniquePath {
 

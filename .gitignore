@@ -2,3 +2,5 @@ Examples/
 *.class
 original.txt
 subgraph.txt
+*.exe
+*.class
