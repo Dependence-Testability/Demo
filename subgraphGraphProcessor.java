@@ -10,7 +10,7 @@ public class subgraphGraphProcessor{
         for (int i = 0; i<10000;i++){
             list_of_graphs.add(subgraph);
         }
-        double[] length= Algorithm2.lengthDistribution(list_of_graphs, subgraph, source, destination);
+        double[] length= estimator.general.Algorithm2.lengthDistribution(list_of_graphs, subgraph, source, destination);
 
     }
 

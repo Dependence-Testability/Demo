@@ -1,7 +1,7 @@
-package general;
+package estimator.general;
 
-import util.Graph;
-import util.Node;
+import estimator.util.Graph;
+import estimator.util.Node;
 
 import java.util.ArrayList;
 import java.util.Collections;
