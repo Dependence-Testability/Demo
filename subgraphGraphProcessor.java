@@ -1,3 +1,5 @@
+import java.util.*;
+
 public class subgraphGraphProcessor{
     public static int num_of_trials; ///not used at all rn
     public static String source;
@@ -11,6 +13,19 @@ public class subgraphGraphProcessor{
             list_of_graphs.add(subgraph);
         }
         double[] length= estimator.general.Algorithm2.lengthDistribution(list_of_graphs, subgraph, source, destination);
+        try (
+           FileWriter fw = new FileWriter("results.txt", true);
+            BufferedWriter bw = new BufferedWriter(fw);
+            PrintWriter out = new PrintWriter(bw))
+        {
+            String line = Arrays.toString(length);
+            //System.out.println(line);
+            out.println(line);
+           // System.out.println("here");
+        } catch (IOException e) {
+          e.printStackTrace();
+          System.err.println("Error writing to result.txt");    
+        }
 
     }
 
