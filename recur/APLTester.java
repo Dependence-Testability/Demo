@@ -55,8 +55,8 @@ public class APLTester {
     //   graph.addNewEdge(edge[0], edge[1]);
     // }
 
-    // analyze("random_dag.txt", 1, 5);
-    analyze("random_graph.txt", 11, 12);
+    analyze("random_dag.txt", 1, 5);
+    // analyze("random_graph.txt", 11, 12);
 
     // TarjanSCC<Integer> scc = new TarjanSCC<Integer>(graph);
     // System.out.println(scc.count() + " Strongly Connected Components");
