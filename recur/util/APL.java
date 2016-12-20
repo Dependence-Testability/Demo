@@ -1,4 +1,4 @@
-package util;
+import recur.util.*;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -92,7 +92,7 @@ public class APL {
               } catch (Exception e) {
                 System.out.println("Not found!");
               }
-              // PairAndSetGenerator.startGeneration(presuffix, u.getValue(), v.getValue());
+              PairAndSetGenerator.startGeneration(presuffix, u.getValue(), v.getValue());
             }
 
             Node<T> x = graph.findEntryNode(entryNode.getValue());
