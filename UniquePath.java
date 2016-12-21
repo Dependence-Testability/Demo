@@ -1,5 +1,5 @@
 import static estimator.util.GraphFactory.constructDenseDAG;
-import static estimator.util.GraphFactory.generateDenseDAG;
+import static estimator.util.GraphFactory.generateDag;
 import static estimator.util.GraphFactory.generateGraph;
 import static estimator.util.GraphFactory.Density;
 import static estimator.general.Algorithm1.naivePathGeneration;
@@ -13,6 +13,7 @@ import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.Scanner;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -34,9 +35,9 @@ public class UniquePath {
 				                          {4, 5}};
 
   public static void main(String[] args) {
-    // System.out.println("***** UNIQUE PATHS *****");
-    // testUniquePaths();
-    // System.out.println("***** UNIQUE PATHS -- END *****\n\n");
+    System.out.println("***** UNIQUE PATHS *****");
+    testUniquePaths();
+    System.out.println("***** UNIQUE PATHS -- END *****\n\n");
     // System.out.println("***** DAG UNIQUE PATHS *****");
     // testDAGUniquePaths();
     // System.out.println("***** DAG UNIQUE PATHS -- END *****\n\n");
@@ -47,9 +48,37 @@ public class UniquePath {
     // testSCCAlgorithm();
     // System.out.println("***** SCC PATH GENERATION -- END *****\n\n");
     // writeGraphs();
+    // System.out.println("***** BRUTE FORCE *****");
+    // Graph<Integer> graph = readGraph(args[0]);
+    // System.out.println(graph);
+    // testUniquePaths(graph);
+    // System.out.println("***** BRUTE FORCE -- END *****");
     System.out.println("***** LENGTH DISTRIBUTION *****");
     testLengthDist();
     System.out.println("***** LENGTH DISTRIBUTION -- END *****");
+  }
+
+  private static Graph<Integer> readGraph(String fileName) {
+    File file = new File(fileName);
+    Graph<Integer> graph = new Graph<>();
+    try {
+      Scanner scan = new Scanner(file);
+      while(scan.hasNextLine()) {
+	String line = scan.nextLine();
+        String[] edge = line.split(" ");
+        graph.addEdge(Integer.parseInt(edge[0]), Integer.parseInt(edge[1]));
+      }
+    } catch (IOException e) {
+	e.printStackTrace();
+    }
+    return graph;
+  }
+
+  private static void testUniquePaths(Graph<Integer> graph) {
+    int count = uniquePaths(graph, 1, 14);
+    System.out.println("Number of unique paths brute force: " + count);
+    count = uniquePathsAverageLength(graph, 1, 14);
+    System.out.println("Average path length brute force: " + count);
   }
 
   private static void writeGraphs(List<Point> graph, List<Point> dag) {
@@ -214,10 +243,10 @@ public class UniquePath {
     System.out.printf("The average length of the unique paths from vertex %d to %d: %d\n", 1, 5, uniquePathsAverageLength(dag, 1, 5));
 
     // Dense Graph
-    int n = 15;
+    int n = 8;
     double d = .8;
     List<Point> graphPts = generateGraph(n, d);
-    List<Point> dagPts = generateDenseDAG();
+    List<Point> dagPts = generateDag(n, d);
     /* List<Point> list = Arrays.asList(
       new Point(1, 2),
       new Point(1, 3),
