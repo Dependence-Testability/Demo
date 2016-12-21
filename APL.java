@@ -119,7 +119,7 @@ public class APL {
               if (decomposeCount % 2 != 0) {
                 System.out.println("Erroniously using Tobi's Algorithm");
               }
-              graph.addSuperEdge(entryNode, exitNode, result[0], result[1]);
+              graph.addSuperEdge(entryNode, exitNode, result[0], (result[1]*result[0]));
             } else {
               if (decomposeCount % 2 == 0) {
                 System.out.println("Erroniously using Daniel's Algorithm");
