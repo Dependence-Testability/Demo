@@ -75,6 +75,15 @@ public class APL {
               try (Writer writer = new BufferedWriter(new OutputStreamWriter(
                         new FileOutputStream("subgraph.txt"), "utf-8"))) {
                 writer.write(rep);
+              } catch (Exception e) {
+                System.out.println("Writing Subgraph Problem");
+              }
+
+              Integer uVal = (Integer) entryNode.getValue();
+              Integer vVal = (Integer) exitNode.getValue();
+              PairAndSetGenerator.startGeneration(presuffix, uVal, vVal);
+
+              try {
                 File file = new File("results.txt");
                 while (!file.exists()) {
                   synchronized(lock) {
@@ -92,13 +101,13 @@ public class APL {
               } catch (Exception e) {
                 System.out.println("Not found!");
               }
-              PairAndSetGenerator.startGeneration(presuffix, u.getValue(), v.getValue());
+              
             }
 
             Node<T> x = graph.findEntryNode(entryNode.getValue());
             Node<T> y = graph.findExitNode(exitNode.getValue());
 
-            if (result[0] == 0.0d) {
+            if (result[0] != 0.0d) {
               graph.addSuperEdge(entryNode, exitNode, result[0], result[1]);
             } else {
               double[] values = APL.computeHelper(subgraph, nodes.get(0), nodes.get(1), presuffix, trials);

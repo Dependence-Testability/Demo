@@ -25,18 +25,18 @@ public class APLTester {
         // 3 paths from 4 to 1
         // Avg path length is 3
 
-        // = {{1, 2}, {1, 3}, {1, 4}, {1, 5},
-        //    {2, 1}, {2, 3}, {2, 4}, {2, 5},
-        //    {3, 1}, {3, 2}, {3, 4}, {3, 5},
-        //    {4, 1}, {4, 2}, {4, 3}, {4, 5},
-        //    {5, 1}, {5, 2}, {5, 3}, {5, 4}};  
+        = {{1, 2}, {1, 3}, {1, 4}, {1, 5},
+           {2, 1}, {2, 3}, {2, 4}, {2, 5},
+           {3, 1}, {3, 2}, {3, 4}, {3, 5},
+           {4, 1}, {4, 2}, {4, 3}, {4, 5},
+           {5, 1}, {5, 2}, {5, 3}, {5, 4}};  
         // 1 Strongly Connected Component
         // 16 paths from 1 to 5
         // Avg path length is 3
 
-        = {{1, 2}, {1, 3}, {1, 4}, {2, 3},
-           {2, 4}, {2, 5}, {3, 2}, {3, 4}, 
-           {3, 5}, {4, 2}, {4, 3}, {4, 5}};
+        // = {{1, 2}, {1, 3}, {1, 4}, {2, 3},
+        //    {2, 4}, {2, 5}, {3, 2}, {3, 4}, 
+        //    {3, 5}, {4, 2}, {4, 3}, {4, 5}};
         // 3 Strongly Connected Components
         // 15 paths from 1 to 5
         // Avg path length is 3.2
@@ -56,7 +56,7 @@ public class APLTester {
 
     // analyze("random_dag.txt", 1, 5);
     // analyze("random_graph.txt", 11, 12);
-    double[] result = APL.compute(graph, 1, 5, 2, 10);
+    double[] result = APL.compute(graph, 1, 5, 4, 10);
     System.out.println("Number of paths is " + result[0]);
     System.out.println("Average length of paths is " + result[1]);
 
