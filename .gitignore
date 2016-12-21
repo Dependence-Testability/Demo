@@ -2,5 +2,7 @@ Examples/
 *.class
 original.txt
 subgraph.txt
+DemoReduce.jar
+testOutput.txt
 *.exe
 *.class

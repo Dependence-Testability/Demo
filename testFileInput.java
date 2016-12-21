@@ -16,6 +16,7 @@ import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
 
 public class testFileInput{
+    public static int counter = 0;
     public static void main(String[] args) throws Exception 
     {
         Configuration conf = new Configuration();
@@ -54,8 +55,8 @@ public class testFileInput{
         job.setInputFormatClass(TextInputFormat.class);
         job.setOutputFormatClass(TextOutputFormat.class);
 
-        FileInputFormat.addInputPath(job, new Path("testOutput.txt"));
-        FileOutputFormat.setOutputPath(job, new Path("DemoReduceOutput"+source+""+dest));
+        FileInputFormat.addInputPath(job, new Path("Demo/testOutput.txt"));
+        FileOutputFormat.setOutputPath(job, new Path("DemoReduceOutput"+counter++));
 
         job.waitForCompletion(true);
     }

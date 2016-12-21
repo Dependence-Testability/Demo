@@ -22,7 +22,7 @@ public class subgraphGraphProcessor{
             BufferedWriter bw = new BufferedWriter(fw);
             PrintWriter out = new PrintWriter(bw))
         {
-            String line = Arrays.toString(length);
+            String line = length[0]+ " "+ length[1];
             //System.out.println(line);
             out.println(line);
            // System.out.println("here");
