@@ -54,9 +54,9 @@ public class APLTester {
     //   graph.addNewEdge(edge[0], edge[1]);
     // }
 
-    analyze("path_count_in_1.txt", 1, 14);
-    analyze("path_count_in_2.txt", 1, 4);
-    analyze("path_count_in_3.txt", 3, 9);
+    analyze("path_count_in_1.txt", 24, 9);
+    analyze("path_count_in_2.txt", 19, 5);
+    analyze("path_count_in_3.txt", 27, 38);
     // double[] result = APL.compute(graph, 1, 5, 4, 10);
     // System.out.println("Number of paths is " + result[0]);
     // System.out.println("Average length of paths is " + result[1]);
