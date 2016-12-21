@@ -38,7 +38,7 @@ public class testFileInput{
         job.waitForCompletion(true);
     }
 
-    public static void initIalizeMapReduce() throws Exception
+    public static void initializeMapReduce(int source, int dest) throws Exception
     {
          Configuration conf = new Configuration();
 
@@ -55,7 +55,7 @@ public class testFileInput{
         job.setOutputFormatClass(TextOutputFormat.class);
 
         FileInputFormat.addInputPath(job, new Path("testOutput.txt"));
-        FileOutputFormat.setOutputPath(job, new Path("DemoReduceOutput"));
+        FileOutputFormat.setOutputPath(job, new Path("DemoReduceOutput"+source+""+dest));
 
         job.waitForCompletion(true);
     }

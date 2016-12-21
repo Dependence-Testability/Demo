@@ -98,7 +98,7 @@ public class APL {
             Node<T> x = graph.findEntryNode(entryNode.getValue());
             Node<T> y = graph.findExitNode(exitNode.getValue());
 
-            if (result[0] == 0.0d) {
+            if (result[0] != 0.0d) {
               graph.addSuperEdge(entryNode, exitNode, result[0], result[1]);
             } else {
               double[] values = APL.computeHelper(subgraph, nodes.get(0), nodes.get(1), presuffix, trials);
