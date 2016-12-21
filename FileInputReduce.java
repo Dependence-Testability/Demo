@@ -15,19 +15,22 @@ import org.apache.hadoop.mapreduce.lib.input.TextInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
 
+import estimator.util.*;
+import estimator.general.*;
+
  public class FileInputReduce extends Reducer<Text, IntWritable, Text, IntWritable> 
 {
  	// public static int num_of_trials;
   //   public static int source;
   //   public  static int destination;
-    public static Graph original_graph;
+    public static Graph<Integer> original_graph;
 
 
 
     public void reduce(Text key, Iterable<IntWritable> values, Context context) 
     throws IOException, InterruptedException 
  	{
- 		ArrayList<String> ver = new ArrayList<String>();
+ 		ArrayList<Integer> ver = new ArrayList<Integer>();
         original_graph = constructGraph(ver);
         String inputline;
  		int[] pref_suff_array = new int[2];	
@@ -170,19 +173,21 @@ import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
         int[] merge_pref_1 = mergeArray(setA, prefix_array);
         int[] merged_suf_1 = mergeArray(suffix_array,setB);
         int[] merged_pref_suf = mergeArray(prefix_array,suffix_array);
+       // System.out.println(merge_pref_1);
+        System.out.println("In PrintPossible");
+
         if(checkValidPath(merge_pref_1) && checkValidPath(merged_suf_1))
         {
+           System.out.println("valid path exist for" + Arrays.toString(merge_pref_1)+ "and" + Arrays.toString(merged_suf_1));
            Text word  = new Text(Arrays.toString(merged_pref_suf));
            IntWritable one = new IntWritable(1);
            context.write(word, one);
         }
-       // Text word = new Text(Arrays.toString(merged_pref_suf)+ " | "+ Arrays.toString(merge_pref_1) +" : "+ Arrays.toString(merged_suf_1));
-        //IntWritable one = new IntWritable();
-        //context.write(word, one);
         int[] merge_pref_2 = mergeArray(setB, prefix_array);
         int[] merged_suf_2 = mergeArray(suffix_array,setA);
         if(checkValidPath(merge_pref_2) && checkValidPath(merged_suf_2))
         {
+            System.out.println("valid path exist for" + Arrays.toString(merge_pref_2)+ "and" + Arrays.toString(merged_suf_2));
             Text word2  = new Text(Arrays.toString(merged_pref_suf));
             IntWritable one = new IntWritable(1);
             context.write(word2, one);
@@ -236,11 +241,13 @@ import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
 
     public static boolean checkValidPath(int[] arr)
     {
+        System.out.println(Arrays.toString(arr));
         if(arr.length>1)
         {
             for (int u = 0; u<arr.length-1; u++)
             {
-                if(!(original_graph.getNode(u).hasEdge( mygraph.getNode(u+1)))){
+                if(!(original_graph.getNode(arr[u]).hasEdge( original_graph.getNode(arr[u+1])))){
+                    System.out.println("edge"+arr[u]+" to "+ arr[u+1]+" not found");
                     return false;
                 }
             }

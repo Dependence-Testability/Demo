@@ -77,7 +77,7 @@ public class APLTester {
         System.out.println("File not found");
     }
 
-    double[] result = APL.compute(graph, start, end, 2, 10);
+    double[] result = APL.compute(graph, start, end, 4, 10);
     System.out.println("Number of paths is " + result[0]);
     System.out.println("Average length of paths is " + result[1]);
 

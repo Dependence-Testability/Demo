@@ -12,6 +12,9 @@ import java.util.*;
 import java.util.Arrays;
 import java.io.*;
 
+import estimator.util.*;
+import estimator.general.*;
+
 public class PairAndSetGenerator
 {
 	//Test purposes only
@@ -34,7 +37,7 @@ public class PairAndSetGenerator
 	}
     public static void startGeneration(int prefSufLength, int source, int dest)
     {
-        File temp_object = new File("testOutPut.txt");
+        File temp_object = new File("testOutput.txt");
         if(temp_object.exists()){
             temp_object.delete();
         }
@@ -49,14 +52,16 @@ public class PairAndSetGenerator
         int number_of_verts = verts.size();
         //System.out.println(number_of_verts);
         generatePairAndSet(vertices,prefSufLength, source, dest);
-        testFileInput.initializeMapReduce();
+        testFileInput.initializeMapReduce(source, dest);
         double[] numPaths_avgLength = subgraphGraphProcessor.init();
 
     }
 
-    public static Graph constructGraph(ArrayList<Integer> verts)
+    public static Graph<Integer> constructGraph(ArrayList<Integer> verts)
     {
-        File original = new File("original.txt");
+        String currentDir = System.getProperty("user.dir");
+        System.out.println("Current dir using System:" +currentDir);
+        File original = new File(currentDir + "/original.txt");
         Graph<Integer> originalGraph = new Graph<Integer>();
         try
         {

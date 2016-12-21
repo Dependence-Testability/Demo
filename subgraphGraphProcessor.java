@@ -1,20 +1,24 @@
 import java.util.*;
+import java.io.*;
+
+import estimator.util.*;
+import estimator.general.*;
 
 public class subgraphGraphProcessor{
     public static int num_of_trials; ///not used at all rn
-    public static String source;
-    public static String destination;
+    public static int source;
+    public static int destination;
 
-    public static  double[] init(){
-        ArrayList<String> verts  = new ArrayList<String>();
-        ArrayList<Graph> list_of_graphs = new ArrayList<Graph>();
-        Graph subgraph = readSubGraph();
+    public static init(){
+        ArrayList<Integer> verts  = new ArrayList<Integer>();
+        ArrayList<Graph<Integer>> list_of_graphs = new ArrayList<Graph<Integer>>();
+        Graph<Integer> subgraph = readSubGraph(verts);
         for (int i = 0; i<10000;i++){
             list_of_graphs.add(subgraph);
         }
         double[] length= estimator.general.Algorithm2.lengthDistribution(list_of_graphs, subgraph, source, destination);
         try (
-           FileWriter fw = new FileWriter("results.txt", true);
+           FileWriter fw = new FileWriter("results.txt", false);
             BufferedWriter bw = new BufferedWriter(fw);
             PrintWriter out = new PrintWriter(bw))
         {
@@ -29,7 +33,7 @@ public class subgraphGraphProcessor{
 
     }
 
-    public static Graph readSubGraph(ArrayList<String> verts)
+    public static Graph readSubGraph(ArrayList<Integer> verts)
     {
         File subgraph = new File("subgraph.txt");
         Graph<Integer> subgraphGraph = new Graph<Integer>();
@@ -65,8 +69,8 @@ public class subgraphGraphProcessor{
         {
             e.printStackTrace();
         }
-        mygraph = subgraphGraph;
+        //mygraph = subgraphGraph;
         return subgraphGraph;
     }
-    public static 
 }
+
