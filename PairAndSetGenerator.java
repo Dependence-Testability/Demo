@@ -52,8 +52,14 @@ public class PairAndSetGenerator
         int number_of_verts = verts.size();
         //System.out.println(number_of_verts);
         generatePairAndSet(vertices,prefSufLength, source, dest);
+        try{
         testFileInput.initializeMapReduce(source, dest);
-        double[] numPaths_avgLength = subgraphGraphProcessor.init();
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+      subgraphGraphProcessor.init();
 
     }
 
@@ -178,7 +184,7 @@ public class PairAndSetGenerator
         //BufferedWriter bw = null;
         
         try (
-           FileWriter fw = new FileWriter("testOutPut.txt", true);
+           FileWriter fw = new FileWriter("testOutput.txt", true);
             BufferedWriter bw = new BufferedWriter(fw);
             PrintWriter out = new PrintWriter(bw))
         {

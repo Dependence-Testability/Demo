@@ -9,7 +9,7 @@ public class subgraphGraphProcessor{
     public static int source;
     public static int destination;
 
-    public static init(){
+    public static void init(){
         ArrayList<Integer> verts  = new ArrayList<Integer>();
         ArrayList<Graph<Integer>> list_of_graphs = new ArrayList<Graph<Integer>>();
         Graph<Integer> subgraph = readSubGraph(verts);
