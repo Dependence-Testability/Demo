@@ -72,6 +72,14 @@ public class APL {
             decomposeCount++;
             if (decomposeCount % 2 == 0) {
               String rep = subgraph.translateToString(entryNode.getValue(), exitNode.getValue(), trials);
+              try {
+                File file = new File("subgraph.txt");
+                if (file.exists()) {
+                  file.delete();
+                }
+              } catch (Exception e) {
+                System.out.println("Subgraph txt Deletion Error");
+              }
               try (Writer writer = new BufferedWriter(new OutputStreamWriter(
                         new FileOutputStream("subgraph.txt"), "utf-8"))) {
                 writer.write(rep);
@@ -108,8 +116,14 @@ public class APL {
             Node<T> y = graph.findExitNode(exitNode.getValue());
 
             if (result[0] != 0.0d) {
+              if (decomposeCount % 2 != 0) {
+                System.out.println("Erroniously using Tobi's Algorithm");
+              }
               graph.addSuperEdge(entryNode, exitNode, result[0], result[1]);
             } else {
+              if (decomposeCount % 2 == 0) {
+                System.out.println("Erroniously using Daniel's Algorithm");
+              }
               double[] values = APL.computeHelper(subgraph, nodes.get(0), nodes.get(1), presuffix, trials);
               graph.addSuperEdge(entryNode, exitNode, values[0], values[1]);
             }
