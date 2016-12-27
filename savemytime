@@ -1,0 +1,12 @@
+#!/bin/bash
+#Please work
+
+rm -rf ../DemoReduceOut*
+rm original.txt
+rm subgraph.txt
+rm testOutput.txt
+rm *.class
+javac *.java
+rm DemoReduce.jar
+jar -cvfe DemoReduce.jar APLTester *.class recur/*.class estimator/general/*.class estimator/util/*.class
+hadoop jar DemoReduce.jar
