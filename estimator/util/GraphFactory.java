@@ -29,7 +29,7 @@ public class GraphFactory {
   private static final int MAX_RANKS = 20;
 
   /** Chance of having an edge (dense graph). */
-  private static final int DENSE_PERCENT = 90;
+  private static final int DENSE_PERCENT = 80;
 
   /** Chance of having an edge (sparse graph). */
   private static final int SPARSE_PERCENT = 30;
@@ -136,6 +136,26 @@ public class GraphFactory {
       nodes += newNodes;
     }
     return edges.isEmpty() ? generateDenseDAG() : edges;
+  }
+
+  public static List<Point> generateDag(int size, double density) {
+      int maxEdges = (int) ((0.5 * density * (double) (size * (size - 1))) + Math.random());
+      List<Point> preList = new ArrayList<>();
+      for (int i = 1; i <= size; i++) {
+	  for (int j = i + 1; j <= size; j++) {
+	      preList.add(new Point(i, j));
+	  }
+      }
+
+    Set<Point> finalList = new HashSet<>();
+    for (int i = 0; i < preList.size() /*<= maxEdges*/; i++) {
+        i = i % preList.size();
+	if (Math.random() < density) {
+	  finalList.add(preList.get(i));
+	}
+    }
+
+    return new ArrayList<>(finalList);
   }
 
   public static List<Point> generateGraph(int size, double density) {

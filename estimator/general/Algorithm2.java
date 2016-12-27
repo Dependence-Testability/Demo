@@ -3,6 +3,7 @@ package estimator.general;
 import estimator.util.Graph;
 import estimator.util.Node;
 
+import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -10,13 +11,72 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Scanner;
 import java.util.Set;
 import java.util.Random;
+import java.io.File;
+import java.io.IOException;
 
 public class Algorithm2 {
 
   private static final int N_BASE = 10000;
   private static final int N_PRIME = 5000;
+
+  public static double[] lengthDistribution(int[] itinerary, int[] excluded) {
+    Set<Integer> excludeSet = new HashSet<>();
+    for (int e : excluded) {
+      excludeSet.add(e);
+    }
+    List<Point> edges = readSubGraph(excludeSet);
+
+    Integer origin = itinerary[0];
+    Integer dest = itinerary[1];
+    Graph<Integer> subgraph = createGraph(edges);
+    List<Graph> graphs = createNCopies(N_BASE, edges);
+    return lengthDistribution(graphs, subgraph, origin, dest);
+  }
+
+  private static List<Point> readSubGraph(Set<Integer> exclude) {
+    File subgraphFile = new File("subgraph.txt");
+    List<Point> subgraphPts = new ArrayList<>();
+    try {
+      Scanner scan = new Scanner(subgraphFile);
+      while (scan.hasNextLine()) {
+	String[] adjacents = scan.nextLine().split(" ");
+	int origin = Integer.parseInt(adjacents[0]);
+        for (int i = 1; i < adjacents.length && !exclude.contains(origin); i++) {
+	  int dest = Integer.parseInt(adjacents[i]);
+          if (!exclude.contains(dest)) {
+	    subgraphPts.add(new Point(origin, dest));
+	  }
+	}
+      }
+    } catch (IOException e) {
+      e.printStackTrace();
+    } finally {
+      if (scan != null) {
+        scan.close();
+      }
+    }
+    return subgraphPts;
+  }
+
+  private static List<Graph<Integer>> createNCopies(int n, List<Point> edges) {
+    Graph<Integer> graph;
+    List<Graph<Integer>> graphs = new ArrayList<>();
+    for (int i = 0; i < n; i++) {
+      graphs.add(createGraph(edges));
+    }
+    return graphs;
+  }
+
+  private static List<Graph<Integer>> createGraph(List<Point> edges) {
+    Graph<Integer> graph = new Graph<>();
+    for (Point pt : edges) {
+      graph.addEdge(pt.x, pt.y);
+    }
+    return graph;
+  }
 
   public static <T> double[] lengthDistribution(List<Graph<T>> nGraph, Graph<T> prGraph, T start, T end) {
     // Step 1
@@ -36,12 +96,13 @@ public class Algorithm2 {
         count++;
       }
     }
-    return new double[]{Math.ceil(paths/(double) N_BASE), length/(double)count};
+    length = count == 0 ? 0.0 : length/(double) count;
+    return new double[]{Math.ceil(paths/(double) N_BASE), length};
   }
 
   private static <T> List<Double> pilotRun(Graph<T> graph, T start, T end) {
      List<Double> pilotList = new ArrayList<>(
-         Collections.nCopies(graph.size() - 1, 0.0));
+         Collections.nCopies(graph.size(), 0.0));
      List<Double> numer = new ArrayList<>(
 	 Collections.nCopies(graph.size(), 0.0));
      List<Double> denom = new ArrayList<>(
@@ -89,7 +150,7 @@ public class Algorithm2 {
       if (curr.hasEdge(end)) {
 	if (curr.getAdjacents().size() == 1) {
 	  end.setVisited(true);
-          end.setSLikelihood(1.0);
+          end.setSLikelihood(likelihood);
 	  completed = true;
 	  continue;
 	} else {
@@ -97,14 +158,12 @@ public class Algorithm2 {
 	  double guessProbability = Math.random();
 	  if (guessProbability < nProbability) {
 	    likelihood = likelihood * nProbability;
-	    curr.setSLikelihood(likelihood);
             end.setSLikelihood(likelihood);
             end.setVisited(true);
 	    completed = true;
             continue;
 	  } else {
 	    likelihood = likelihood * (1.0 - nProbability);
-	    curr.setSLikelihood(likelihood);
 	  }
 	}
       }
