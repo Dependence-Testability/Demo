@@ -1,12 +1,15 @@
-import java.io.*;  
 import java.io.IOException;
 import java.util.*;
 import java.util.Arrays;
 import java.io.File;
 import java.net.*;  
 import java.io.FileNotFoundException;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.util.Scanner;
+import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.fs.FSDataInputStream;
 import org.apache.hadoop.conf.*;
 import org.apache.hadoop.io.*;
 import org.apache.hadoop.mapreduce.*;
@@ -213,27 +216,35 @@ import estimator.general.*;
 
     public static Graph constructGraph(ArrayList<Integer> verts)
     {
-        File original = new File("original.txt");
         Graph<Integer> originalGraph = new Graph<Integer>();
         try
         {
-            Scanner in = new Scanner(original);
-            
-            //ArraysList<Integer> verts= new ArrayList<Integer>(); 
-            while(in.hasNextLine())
+            Configuration config = new Configuration();
+            config.addResource(new Path("/etc/hadoop/conf/core-site.xml"));
+            config.addResource(new Path("/etc/hadoop/conf/hdfs-site.xml"));
+            Path filePath = new Path("/user/dmariselli17/CS490-2/original.txt");
+            FileSystem fs = filePath.getFileSystem(config);
+            FSDataInputStream fsDataInputStream = fs.open(filePath);
+            BufferedReader br = new BufferedReader(new InputStreamReader(fsDataInputStream));
+            String line = br.readLine();
+            while(line != null)
             {
-                String line  = in.nextLine();
                 String[] lineArray = line.split(" ");
                 verts.add(Integer.parseInt(lineArray[0]));
                 for(int i = 1; i<lineArray.length; i++)
                 {
                     originalGraph.addEdge(Integer.parseInt(lineArray[0]), Integer.parseInt(lineArray[i]));
                 }
+                line = br.readLine();
             }
+            br.close();
+            fs.close();
         }
-        catch(FileNotFoundException e)
+        catch(Exception e)
         {
+            System.err.println("FileInputReduce Error");
             e.printStackTrace();
+            System.exit(1);
         }
 
         return originalGraph;
