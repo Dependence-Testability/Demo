@@ -32,15 +32,16 @@ public class Algorithm2 {
     Integer origin = itinerary[0];
     Integer dest = itinerary[1];
     Graph<Integer> subgraph = createGraph(edges);
-    List<Graph> graphs = createNCopies(N_BASE, edges);
+    List<Graph<Integer>> graphs = createNCopies(N_BASE, edges);
     return lengthDistribution(graphs, subgraph, origin, dest);
   }
 
   private static List<Point> readSubGraph(Set<Integer> exclude) {
     File subgraphFile = new File("subgraph.txt");
     List<Point> subgraphPts = new ArrayList<>();
+    Scanner scan = null;
     try {
-      Scanner scan = new Scanner(subgraphFile);
+      scan = new Scanner(subgraphFile);
       while (scan.hasNextLine()) {
 	String[] adjacents = scan.nextLine().split(" ");
 	int origin = Integer.parseInt(adjacents[0]);
@@ -70,7 +71,7 @@ public class Algorithm2 {
     return graphs;
   }
 
-  private static List<Graph<Integer>> createGraph(List<Point> edges) {
+  private static Graph<Integer> createGraph(List<Point> edges) {
     Graph<Integer> graph = new Graph<>();
     for (Point pt : edges) {
       graph.addEdge(pt.x, pt.y);
