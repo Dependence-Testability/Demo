@@ -56,7 +56,7 @@ public class PairAndSetGenerator
             {
                 e.printStackTrace();
             }
-            subgraphGraphProcessor.init();
+            //subgraphGraphProcessor.init();
         }
 
     }

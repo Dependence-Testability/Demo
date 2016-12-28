@@ -9,82 +9,101 @@ import estimator.general.*;
 import recur.*;
 
 public class subgraphGraphProcessor{
+
     public static int num_of_trials; ///not used at all rn
     public static int source;
     public static int destination;
 
-    public static void init(){
+    //for testing purposes only
+    public static void main (String args[]){
+        init2("/mapReduceOutput.txt");
+    }
+
+    public static void initialize(String filename){
         ArrayList<Integer> verts  = new ArrayList<Integer>();
-        ArrayList<Graph<Integer>> list_of_graphs = new ArrayList<Graph<Integer>>();
-        List<Point> points = constructGraph(verts);
-        for (int i = 0; i<10000;i++){
-            Graph<Integer> graph = new Graph<>();
-            for (Point p : points) {
-                graph.addEdge(p.x, p.y);
+        //ArrayList<Graph<Integer>> list_of_graphs = new ArrayList<Graph<Integer>>();
+        HashMap<String,Integer> myMap = mapKeyToValues(filename);
+        HashMap<double, double> finalresultHolder = new HashMap<double, double>();
+        Set<String> keys = myMap.keySet();
+        for (String key: keys){
+            String line  = key;
+            String[] lineArray = line.split(":");
+            String[] sourceDestArray =  lineArray[0].replace(']',' ').replace('[',' ').trim().split(",");
+            String[] toExcludeArray =  lineArray[1].replace(']',' ').replace('[',' ').trim().split(",");
+            int[] sourceDestArrayFinal = new int[sourceDestArray.length];
+            int[] toExcludeArrayFinal = new int[toExcludeArray.length];
+            for (int i = 0;i< sourceDestArray.length;i++)
+            {
+                sourceDestArrayFinal[i] = Integer.parseInt(sourceDestArray[i].trim());
             }
-            list_of_graphs.add(graph;)
+            for (int j = 0;j< toExcludeArray.length;j++)
+            {
+                toExcludeArrayFinal[j] = Integer.parseInt(toExcludeArray[j].trim());
+            }
+
+            //System.out.println(Arrays.toString(sourceDestArrayFinal));
+            //System.out.println(Arrays.toString(toExcludeArrayFinal));
+            double[] result = estimator.general.lengthDistribution(sourceDestArrayFinal,toExcludeArrayFinal);
+            double num_of_paths_result = result[0];
+            double avglength_result = result[1];
+            double num_of_paths = num_of_paths_result * myMap.get(key);
+            double avglength = avglength_tobi + toExcludeArray.length; 
+            finalresultHolder.put(num_of_paths,avglength);
         }
-        Graph<Integer> graph = new Graph<>();
-        for (Point p : points) {
-            graph.addEdge(p.x, p.y);
+        Set<String> keys2 = finalresultHolder.keySet();
+        double resultVal1;
+        double resultVal12;
+        for(double num: keys2){
+            resultVal1+=num;
+            resultVal2+= (num* finalresultHolder.get(num));
         }
-        TarjanSCC<Integer> checker = new TarjanSCC<Integer>(graph);
-        List<SCC<Integer>> sccs = checker.getSCCs();
-        double[] length;
-        if (sccs.size() == graph.size())
-        {
-            length = estimator.general.PathFinder.dagTraversal(graph, source, destination);
-        }
-        else{
-            length= estimator.general.Algorithm2.lengthDistribution(list_of_graphs, graph, source, destination);
-        }
-        boolean dag = recur.
-        double[] length = estimator.general.Algorithm2.lengthDistribution(list_of_graphs, graph, source, destination);
         try (
            FileWriter fw = new FileWriter("results.txt", false);
             BufferedWriter bw = new BufferedWriter(fw);
             PrintWriter out = new PrintWriter(bw))
         {
-            String line = length[0]+ " "+ length[1];
-            //System.out.println(line);
+            String line = "[" + resultVal1+", "+ (resultVal2/resultVal1) +"]";
             out.println(line);
-           // System.out.println("here");
         } catch (IOException e) {
           e.printStackTrace();
           System.err.println("Error writing to result.txt");    
         }
-
     }
 
-    public static Graph readSubGraph(ArrayList<Integer> verts)
+        //TarjanSCC<Integer> checker = new TarjanSCC<Integer>(graph);
+        //List<SCC<Integer>> sccs = checker.getSCCs();
+        //double[] length;
+        //ArrayList<double> length;
+        // if (sccs.size() == graph.size())
+        // {
+        //     length = estimator.general.PathFinder.dagTraversal(graph, source, destination);
+        // }
+        // else{
+        //     length= estimator.general.Algorithm2.lengthDistribution(list_of_graphs, graph, source, destination);
+        // }
+        // //boolean dag = recur.
+        // double[] length = estimator.general.Algorithm2.lengthDistribution(list_of_graphs, graph, source, destination);
+    }
+
+
+    public static HashMap<String,Integer> mapKeyToValues(String file)
     {
-        File subgraph = new File("subgraph.txt");
-        Graph<Integer> subgraphGraph = new Graph<Integer>();
+        File subgraph = new File(file);
+        HashMap<String,Integer> myMap = new HashMap<String,Integer>();
         try
         {
             Scanner in = new Scanner(subgraph);
-            
-           /* Line 1 in subgraph should contain the number fo trails for Algoithm 2
-            Line 2 should contain source and destnation 
-            rest of graph in form of: 
-            v1 verts adjacent to v1
-           */
-            String line1 = in.nextLine(); 
-            num_of_trials = Integer.parseInt(line1); //nuber of trials for Algorithm2
-            String line2 = in.nextLine(); //Source and destination
-            String[] source_dest = line2.split(" ");
-            source = Integer.parseInt(source_dest[0]);
-            destination = Integer.parseInt(source_dest[1]);
-
-            //Process to read graph
+            //Process to count # of pref/suff tha work for each
             while(in.hasNextLine())
             {
-                String line  = in.nextLine();
-                String[] lineArray = line.split(" ");
-                verts.add(Integer.parseInt(lineArray[0]));
-                for(int i = 1; i<lineArray.length; i++)
-                {
-                    subgraphGraph.addEdge(Integer.parseInt(lineArray[0]), Integer.parseInt(lineArray[i]));
+                String line = in.nextLine();
+                if (myMap.containsKey(line)){
+                    //System.out.println("Seen this before");
+                    int curr_count = myMap.get(line);
+                    myMap.put(line,curr_count+1);
+                }
+                else{
+                myMap.put(line,1);
                 }
             }
         }
@@ -92,37 +111,7 @@ public class subgraphGraphProcessor{
         {
             e.printStackTrace();
         }
-        //mygraph = subgraphGraph;
-        return subgraphGraph;
-    }
-    public static List<Point> constructGraph(ArrayList<Integer> verts)
-    {
-        Graph<Integer> originalGraph = new Graph<Integer>();
-        try{
-            System.out.println("In try block for Construct Graph");
-            URL url = new URL("http://textuploader.com/ddxam/raw");
-            URLConnection yc = url.openConnection();
-            yc.setRequestProperty("User-Agent", "Mozilla/5.0");
-            Scanner in = new Scanner(new InputStreamReader(yc.getInputStream()));
-            List<Point> listPoints = new ArrayList<>();
-            while(in.hasNextLine())
-            {
-                String line  = in.nextLine();
-                String[] lineArray = line.split(" ");
-                verts.add(Integer.parseInt(lineArray[0]));
-                for(int i = 1; i<lineArray.length; i++)
-                {
-                    originalGraph.addEdge(Integer.parseInt(lineArray[0]), Integer.parseInt(lineArray[i]));
-                    list.add(new Point(Integer.parseInt(lineArray[0]), Integer.parseInt(lineArray[i])));
-                }
-            }
-        }
-        catch(Exception e)
-        {
-            e.printStackTrace();
-        }
-        return list; //originalGraph;
-
+        return myMap;
     }
 }
 
