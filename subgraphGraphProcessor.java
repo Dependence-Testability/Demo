@@ -1,8 +1,12 @@
 import java.util.*;
+import java.awt.*;
 import java.io.*;
+
+import java.net.*; 
 
 import estimator.util.*;
 import estimator.general.*;
+import recur.*;
 
 public class subgraphGraphProcessor{
     public static int num_of_trials; ///not used at all rn
@@ -12,11 +16,30 @@ public class subgraphGraphProcessor{
     public static void init(){
         ArrayList<Integer> verts  = new ArrayList<Integer>();
         ArrayList<Graph<Integer>> list_of_graphs = new ArrayList<Graph<Integer>>();
-        Graph<Integer> subgraph = readSubGraph(verts);
+        List<Point> points = constructGraph(verts);
         for (int i = 0; i<10000;i++){
-            list_of_graphs.add(subgraph);
+            Graph<Integer> graph = new Graph<>();
+            for (Point p : points) {
+                graph.addEdge(p.x, p.y);
+            }
+            list_of_graphs.add(graph;)
         }
-        double[] length= estimator.general.Algorithm2.lengthDistribution(list_of_graphs, subgraph, source, destination);
+        Graph<Integer> graph = new Graph<>();
+        for (Point p : points) {
+            graph.addEdge(p.x, p.y);
+        }
+        TarjanSCC<Integer> checker = new TarjanSCC<Integer>(graph);
+        List<SCC<Integer>> sccs = checker.getSCCs();
+        double[] length;
+        if (sccs.size() == graph.size())
+        {
+            length = estimator.general.PathFinder.dagTraversal(graph, source, destination);
+        }
+        else{
+            length= estimator.general.Algorithm2.lengthDistribution(list_of_graphs, graph, source, destination);
+        }
+        boolean dag = recur.
+        double[] length = estimator.general.Algorithm2.lengthDistribution(list_of_graphs, graph, source, destination);
         try (
            FileWriter fw = new FileWriter("results.txt", false);
             BufferedWriter bw = new BufferedWriter(fw);
@@ -71,6 +94,35 @@ public class subgraphGraphProcessor{
         }
         //mygraph = subgraphGraph;
         return subgraphGraph;
+    }
+    public static List<Point> constructGraph(ArrayList<Integer> verts)
+    {
+        Graph<Integer> originalGraph = new Graph<Integer>();
+        try{
+            System.out.println("In try block for Construct Graph");
+            URL url = new URL("http://textuploader.com/ddxam/raw");
+            URLConnection yc = url.openConnection();
+            yc.setRequestProperty("User-Agent", "Mozilla/5.0");
+            Scanner in = new Scanner(new InputStreamReader(yc.getInputStream()));
+            List<Point> listPoints = new ArrayList<>();
+            while(in.hasNextLine())
+            {
+                String line  = in.nextLine();
+                String[] lineArray = line.split(" ");
+                verts.add(Integer.parseInt(lineArray[0]));
+                for(int i = 1; i<lineArray.length; i++)
+                {
+                    originalGraph.addEdge(Integer.parseInt(lineArray[0]), Integer.parseInt(lineArray[i]));
+                    list.add(new Point(Integer.parseInt(lineArray[0]), Integer.parseInt(lineArray[i])));
+                }
+            }
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+        }
+        return list; //originalGraph;
+
     }
 }
 

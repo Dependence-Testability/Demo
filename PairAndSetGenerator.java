@@ -20,19 +20,6 @@ public class PairAndSetGenerator
 	//Test purposes only
     public static void main(String[] args) 
 	{
-		// ArrayList<Integer> verts = new ArrayList<Integer>();
-		// int prefix_length = 2;
-		// int suffix_length = 2;
-		// Graph<Integer> graph = constructGraph(verts);
-
-		// int[] vertices = new int[verts.size()]; //11,12,13,14,15,16,17,18,19,20;
-  //       //verts.toArray(vertices);
-  //       for(int j=0; j<verts.size();j++)
-  //       {
-  //           vertices[j] = verts.get(j);
-  //       }
-		// int number_of_verts = verts.size();
-		// generatePairAndSet(vertices,prefix_length+suffix_length);
         startGeneration(4, 1, 2);
 	}
     public static void startGeneration(int prefSufLength, int source, int dest)
@@ -44,36 +31,46 @@ public class PairAndSetGenerator
         ArrayList<Integer> verts = new ArrayList<Integer>();
         Graph<Integer> graph = constructGraph(verts);
 
-        int[] vertices = new int[verts.size()]; //11,12,13,14,15,16,17,18,19,20;
+        int[] vertices = new int[verts.size()-2]; //11,12,13,14,15,16,17,18,19,20;
+        int verticesCount = 0;
         for(int j=0; j<verts.size();j++)
         {
-            vertices[j] = verts.get(j);
+            if( (verts.get(j)!=source) && (verts.get(j)!=dest) ){
+               vertices[verticesCount] = verts.get(j); 
+               verticesCount++;
+            }
         }
         int number_of_verts = verts.size();
         //System.out.println(number_of_verts);
-        generatePairAndSet(vertices,prefSufLength, source, dest);
-        try{
-        testFileInput.initializeMapReduce(source, dest);
+        if(number_of_verts<=3){
+            //insert BruteForce Solution
+        }  
+        else{
+            int actual_excluded_verts = Math.min(prefSufLength,number_of_verts-2);
+            System.out.println(" Actual # of excluded verts is :" + actual_excluded_verts+" , out of total: " +number_of_verts);
+            generatePairAndSet(vertices,actual_excluded_verts, source, dest);
+            try{
+            testFileInput.initializeMapReduce(source, dest);
+            }
+            catch (Exception e)
+            {
+                e.printStackTrace();
+            }
+            subgraphGraphProcessor.init();
         }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-        }
-      subgraphGraphProcessor.init();
 
     }
 
     public static Graph<Integer> constructGraph(ArrayList<Integer> verts)
     {
-        String currentDir = System.getProperty("user.dir");
-        System.out.println("Current dir using System:" +currentDir);
-        File original = new File(currentDir + "/original.txt");
+        //String currentDir = System.getProperty("user.dir");
+        //System.out.println("Current dir using System:" +currentDir);
+        File original = new File("sugraph.txt");
         Graph<Integer> originalGraph = new Graph<Integer>();
         try
         {
             Scanner in = new Scanner(original);
             
-            //ArraysList<Integer> verts= new ArrayList<Integer>(); 
             while(in.hasNextLine())
             {
                 String line  = in.nextLine();
@@ -101,22 +98,7 @@ public class PairAndSetGenerator
     {
         if (index == r)
         {
-            //Sice its a pair, generate all sets of length pref+suff-2
-            if((data[0]==source) && (data[1]==dest))
-            {
-                generateAndPrintSet(arr,data,setLength-r);
-            }
-            else if((data[1]==source) && (data[0]==dest))
-            {
-                int[] tempdata = new int[data.length];
-                int f =0;
-                for (int l=data.length-1; l>=0; l--)
-                {
-                    tempdata[f] = data[l];
-                    f++;
-                }
-                generateAndPrintSet(arr, tempdata, setLength-r);
-            }
+            generateAndPrintSet(arr,data,setLength-r,source,dest);
             return;
         }
         for (int i=start; i<=end && end-i+1 >= r-index; i++)
@@ -132,66 +114,60 @@ public class PairAndSetGenerator
         combinationUtil(arr, data, 0, n-1, 0, r,setLength, source,dest);
     }
 
-    public static void generateAndPrintSet(int[] arr,int[] data,int actual_setLength)
+     public static void generateAndPrintSet(int[] arr,int[] data,int actual_setLength,int source, int dest)
     {
-    	
-    	//Set<Integer> setA = new HashSet(Arrays.asList(temp_arr));
-		Set<Integer> setB = new HashSet<Integer>();
-		for (int k = 0; k<data.length;k++)
-		{
-			setB.add(data[k]);
-		}
+        
+        //Set<Integer> setA = new HashSet(Arrays.asList(temp_arr));
+        Set<Integer> setB = new HashSet<Integer>();
+        for (int k = 0; k<data.length;k++)
+        {
+            setB.add(data[k]);
+        }
 
-    	int[] temp_arr = new int[arr.length-data.length];
-    	int l = 0;
-    	for (int m = 0; m<arr.length;m++)
-    	{
-    		if(!setB.contains(arr[m]))
-    		{
-    			temp_arr[l] = arr[m];
-    			l++;
-    		}
-    	}
-    	arr = temp_arr;
+        int[] temp_arr = new int[arr.length-data.length];
+        int l = 0;
+        for (int m = 0; m<arr.length;m++)
+        {
+            if(!setB.contains(arr[m]))
+            {
+                temp_arr[l] = arr[m];
+                l++;
+            }
+        }
+        arr = temp_arr;
         int[] new_data=new int[actual_setLength];
         int n = arr.length;
-        combinationUtility(arr, new_data, 0, n-1, 0, actual_setLength,data);
+        combinationUtility(arr, new_data, 0, n-1, 0, actual_setLength,data, source,dest);
     }
-    public static void combinationUtility(int[] arr, int[] new_data, int start,int end, int index, int setLength,int[] data)
+    public static void combinationUtility(int[] arr, int[] new_data, int start,int end, int index, int setLength,int[] data,int source, int dest)
     {
         
         if (index == setLength)
         {
-           	printSourceDestAndSet(new_data,data);
+            printSourceDestAndSet(new_data,data,source,dest);
+            int[] data_reverse = new int[data.length]; //for reversing dest and source
+            for (int q=data.length-1;q>=0;q--){
+                data_reverse[data.length-q-1] = data[q];
+            }
+            printSourceDestAndSet(new_data,data_reverse,source,dest);
             return;
         }
 
         for (int i=start; i<=end && end-i+1 >= setLength-index; i++)
         {
             new_data[index] = arr[i];
-            combinationUtility(arr, new_data, i+1, end, index+1, setLength,data);
+            combinationUtility(arr, new_data, i+1, end, index+1, setLength,data,source,dest);
         }
     }
-    public static void printSourceDestAndSet(int[] setToExclude, int[] source_dest)
-    {
-    	//System.out.println(Arrays.toString(source_dest) +" : "+ Arrays.toString(setToExclude));
-		//int[] dest_source = new int[source_dest.length];
-		//dest_source[0] = source_dest[1];
-		//dest_source[1] = source_dest[0];
-    	//System.out.println(Arrays.toString(dest_source) +" : "+ Arrays.toString(setToExclude));
-        //File file = new File("testOutPut.txt");
-        //FileWriter fw = null;
-        //BufferedWriter bw = null;
-        
+    public static void printSourceDestAndSet(int[] setToExclude, int[] source_dest, int source, int dest)
+    {   
         try (
            FileWriter fw = new FileWriter("testOutput.txt", true);
             BufferedWriter bw = new BufferedWriter(fw);
             PrintWriter out = new PrintWriter(bw))
         {
-            String line = Arrays.toString(source_dest) + " : "+ Arrays.toString(setToExclude);
-            //System.out.println(line);
+            String line = "("+source+","+dest+")" +" : " + Arrays.toString(source_dest) + " : "+ Arrays.toString(setToExclude);
             out.println(line);
-           // System.out.println("here");
         } catch (IOException e) {
           e.printStackTrace();
           System.err.println("Error on graph write!");    

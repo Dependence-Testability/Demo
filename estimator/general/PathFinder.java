@@ -138,7 +138,7 @@ public class PathFinder {
    *     <code>start</code> to <code>end</code> in <code>graph</code>.
    *
    */
-  public static <T> int[] dagTraversal(Graph<T> graph,
+  public static <T> double[] dagTraversal(Graph<T> graph,
       T start, T end) {
     Node<T> sNode = graph.getNode(start);
     Node<T> eNode = graph.getNode(end);
@@ -146,13 +146,13 @@ public class PathFinder {
     eNode.addDistance(0);
     eNode.setVisited(true);
     calculatePath(dfsOrdered, 0, sNode, eNode);
-    int lengthSums = 0;
-    int totalNumPaths = 0;
+    double lengthSums = 0;
+    double totalNumPaths = 0;
     for (Map.Entry<Integer, Integer> entry : sNode.getDistances().entrySet()) {
       lengthSums += entry.getValue() * entry.getKey();
       totalNumPaths += entry.getValue();
     }
-    return new int[]{totalNumPaths, totalNumPaths == 0 ? 0
+    return new double[]{totalNumPaths, totalNumPaths == 0.0 ? 0.0
         : lengthSums/totalNumPaths};
   }
 

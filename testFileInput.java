@@ -55,7 +55,7 @@ public class testFileInput{
         job.setInputFormatClass(TextInputFormat.class);
         job.setOutputFormatClass(TextOutputFormat.class);
 
-        FileInputFormat.addInputPath(job, new Path("CS490-2/testOutput.txt"));
+        FileInputFormat.addInputPath(job, new Path("Demo/testOutput.txt"));
         FileOutputFormat.setOutputPath(job, new Path("DemoReduceOutput"+counter++));
 
         job.waitForCompletion(true);
