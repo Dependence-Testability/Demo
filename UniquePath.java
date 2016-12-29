@@ -169,7 +169,7 @@ public class UniquePath {
       dag.addEdge(edge[0], edge[1]);
     }
 
-    int[] dagCounts = dagTraversal(dag, 1, 5);
+    double[] dagCounts = dagTraversal(dag, 1, 5);
     System.out.printf("The number of paths between nodes 1 and 5 is: %d\n", 
         dagCounts[0]);
     System.out.printf("The average length of the paths between nodes 1 and 5 is: %d\n\n", dagCounts[1]);
@@ -178,7 +178,7 @@ public class UniquePath {
     Graph<Integer> randomDag = constructDenseDAG();
     int start = getValidStart(randomDag);
     int end = getValidEnd(randomDag);
-    int[] randDagCounts = dagTraversal(randomDag, start, end);
+    double[] randDagCounts = dagTraversal(randomDag, start, end);
     System.out.println(randomDag);
     System.out.printf("The number of unique paths from node %d to %d in this DAG is: %d \n", start, end, randDagCounts[0]);
     System.out.printf("The average length of the number of unique paths from node %d to %d in this DAG is: %d \n", start, end, randDagCounts[1]);

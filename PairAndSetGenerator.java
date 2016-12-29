@@ -14,6 +14,7 @@ import java.io.*;
 
 import estimator.util.*;
 import estimator.general.*;
+import recur.*;
 
 public class PairAndSetGenerator
 {
@@ -22,8 +23,44 @@ public class PairAndSetGenerator
 	{
         startGeneration(4, 1, 2);
 	}
+    
     public static void startGeneration(int prefSufLength, int source, int dest)
     {
+       ArrayList<Integer> verts = new ArrayList<Integer>();
+        Graph<Integer> graph = constructGraph(verts);
+        TarjanSCC<Integer> checker = new TarjanSCC<Integer>(graph);
+        List<SCC<Integer>> sccs = checker.getSCCs();
+        //int[] length;
+        //ArrayList<double> length;
+        if (sccs.size() == graph.size())
+        {
+            System.out.println("GRAPH IS A STRONGLY CONNECTED");            
+            int[] length = estimator.general.PathFinder.dagTraversal(graph, source, destination);
+            try (
+            FileWriter fw = new FileWriter("results.txt", false);
+            BufferedWriter bw = new BufferedWriter(fw);
+            PrintWriter out = new PrintWriter(bw))
+            {
+                String line = "[" + length[0]+", "+ length[1] +"]";
+                System.out.println("=================="+ line + "==============");
+                out.println(line);
+            } 
+            catch (IOException e) 
+            {
+              e.printStackTrace();
+              System.err.println("Error writing to result.txt");    
+            }
+        }
+        else{
+            startGenerationUtil(prefSufLength,source,destination)
+            //length= estimator.general.Algorithm2.lengthDistribution(list_of_graphs, graph, source, destination);
+        }
+        //boolean dag = recur.
+        double[] length = estimator.general.Algorithm2.lengthDistribution(list_of_graphs, graph, source, destination); 
+    }
+    public static void startGenerationUtil(int prefSufLength, int source, int dest)
+    {
+        
         File temp_object = new File("testOutput.txt");
         if(temp_object.exists()){
             temp_object.delete();
