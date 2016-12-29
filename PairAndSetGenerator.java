@@ -55,8 +55,7 @@ public class PairAndSetGenerator
             startGenerationUtil(prefSufLength,source,destination)
             //length= estimator.general.Algorithm2.lengthDistribution(list_of_graphs, graph, source, destination);
         }
-        //boolean dag = recur.
-        double[] length = estimator.general.Algorithm2.lengthDistribution(list_of_graphs, graph, source, destination); 
+       
     }
     public static void startGenerationUtil(int prefSufLength, int source, int dest)
     {
@@ -107,16 +106,23 @@ public class PairAndSetGenerator
         try
         {
             Scanner in = new Scanner(original);
-            
+            int counter=0;
             while(in.hasNextLine())
             {
-                String line  = in.nextLine();
-                String[] lineArray = line.split(" ");
-                verts.add(Integer.parseInt(lineArray[0]));
-                for(int i = 1; i<lineArray.length; i++)
-                {
-                    originalGraph.addEdge(Integer.parseInt(lineArray[0]), Integer.parseInt(lineArray[i]));
+                
+                if(counter>=2){
+                    String line  = in.nextLine();
+                    String[] lineArray = line.split(" ");
+                    verts.add(Integer.parseInt(lineArray[0]));
+                    for(int i = 1; i<lineArray.length; i++)
+                    {
+                        originalGraph.addEdge(Integer.parseInt(lineArray[0]), Integer.parseInt(lineArray[i]));
+                    }
                 }
+                else{
+                    String line =  in.nextLine();
+                }
+                counter++;
             }
         }
         catch(FileNotFoundException e)
