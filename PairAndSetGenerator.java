@@ -35,7 +35,7 @@ public class PairAndSetGenerator
         if (sccs.size() == graph.size())
         {
             System.out.println("GRAPH IS A STRONGLY CONNECTED");            
-            int[] length = estimator.general.PathFinder.dagTraversal(graph, source, destination);
+            double[] length = estimator.general.PathFinder.dagTraversal(graph, source, destination);
             try (
             FileWriter fw = new FileWriter("results.txt", false);
             BufferedWriter bw = new BufferedWriter(fw);
