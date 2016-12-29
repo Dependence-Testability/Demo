@@ -21,7 +21,6 @@ public class subgraphGraphProcessor{
 
     public static void initialize(String filename){
         ArrayList<Integer> verts  = new ArrayList<Integer>();
-        //ArrayList<Graph<Integer>> list_of_graphs = new ArrayList<Graph<Integer>>();
         HashMap<String,Integer> myMap = mapKeyToValues(filename);
         HashMap<double, double> finalresultHolder = new HashMap<double, double>();
         Set<String> keys = myMap.keySet();
@@ -44,25 +43,29 @@ public class subgraphGraphProcessor{
             //System.out.println(Arrays.toString(sourceDestArrayFinal));
             //System.out.println(Arrays.toString(toExcludeArrayFinal));
             double[] result = estimator.general.lengthDistribution(sourceDestArrayFinal,toExcludeArrayFinal);
+            System.out.println(result+"RETURNED FROM TOBI");
             double num_of_paths_result = result[0];
             double avglength_result = result[1];
             double num_of_paths = num_of_paths_result * myMap.get(key);
             double avglength = avglength_tobi + toExcludeArray.length; 
+            final_num_of_paths+=num_of_paths;
+            final_avglength += (num_of_paths*avglength);
             finalresultHolder.put(num_of_paths,avglength);
         }
-        Set<String> keys2 = finalresultHolder.keySet();
-        double resultVal1;
-        double resultVal12;
-        for(double num: keys2){
-            resultVal1+=num;
-            resultVal2+= (num* finalresultHolder.get(num));
-        }
+        // Set<String> keys2 = finalresultHolder.keySet();
+        // double resultVal1;
+        // double resultVal12;
+        // for(double num: keys2){
+        //     resultVal1+=num;
+        //     resultVal2+= (num* finalresultHolder.get(num));
+        // }
         try (
            FileWriter fw = new FileWriter("results.txt", false);
             BufferedWriter bw = new BufferedWriter(fw);
             PrintWriter out = new PrintWriter(bw))
         {
-            String line = "[" + resultVal1+", "+ (resultVal2/resultVal1) +"]";
+            String line = "[" + final_num_of_paths+", "+ (final_avglength/final_num_of_paths) +"]";
+            System.out.println("=================="+ line + "==============");
             out.println(line);
         } catch (IOException e) {
           e.printStackTrace();
