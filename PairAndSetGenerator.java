@@ -14,7 +14,8 @@ import java.io.*;
 
 import estimator.util.*;
 import estimator.general.*;
-import recur.*;
+import recur.TarjanSCC;
+import recur.SCC;
 
 public class PairAndSetGenerator
 {
@@ -35,7 +36,7 @@ public class PairAndSetGenerator
         if (sccs.size() == graph.size())
         {
             System.out.println("GRAPH IS A STRONGLY CONNECTED");            
-            double[] length = estimator.general.PathFinder.dagTraversal(graph, source, destination);
+            double[] length = estimator.general.PathFinder.dagTraversal(graph, source, dest);
             try (
             FileWriter fw = new FileWriter("results.txt", false);
             BufferedWriter bw = new BufferedWriter(fw);
@@ -52,7 +53,7 @@ public class PairAndSetGenerator
             }
         }
         else{
-            startGenerationUtil(prefSufLength,source,destination)
+            startGenerationUtil(prefSufLength,source,dest);
             //length= estimator.general.Algorithm2.lengthDistribution(list_of_graphs, graph, source, destination);
         }
        
@@ -132,6 +133,7 @@ public class PairAndSetGenerator
 
         return originalGraph;
     }
+    
 	public static void generatePairAndSet(int[] verts, int setLength, int source, int dest)
 	{
 		generateCombination(verts,verts.length,2,setLength, source, dest);

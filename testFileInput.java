@@ -62,6 +62,6 @@ public class testFileInput{
         if(job.isSuccessful()){
             subgraphGraphProcessor.initialize("DemoReduceOutput"+counter+"/part-r-00000");
         }
-        counter++
+        counter++;
     }
 }

@@ -237,7 +237,7 @@ import estimator.general.*;
             System.exit(1);
         }
 
-        return originalGraph;
+        return subGraph;
     }
 
     public static boolean checkValidPath(int[] arr)
@@ -247,7 +247,7 @@ import estimator.general.*;
         {
             for (int u = 0; u<arr.length-1; u++)
             {
-                if(!(original_graph.getNode(arr[u]).hasEdge( original_graph.getNode(arr[u+1])))){
+                if(!(subGraph.getNode(arr[u]).hasEdge( subGraph.getNode(arr[u+1])))){
                     System.out.println("edge"+arr[u]+" to "+ arr[u+1]+" not found");
                     return false;
                 }

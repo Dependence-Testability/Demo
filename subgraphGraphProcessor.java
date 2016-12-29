@@ -6,23 +6,26 @@ import java.net.*;
 
 import estimator.util.*;
 import estimator.general.*;
-import recur.*;
+//import recur.*;
 
 public class subgraphGraphProcessor{
 
     public static int num_of_trials; ///not used at all rn
     public static int source;
     public static int destination;
+    public static int final_num_of_paths;
+    public static int final_avglength;
 
     //for testing purposes only
     public static void main (String args[]){
-        init2("/mapReduceOutput.txt");
+        initialize("/mapReduceOutput.txt");
     }
 
+    
     public static void initialize(String filename){
         ArrayList<Integer> verts  = new ArrayList<Integer>();
         HashMap<String,Integer> myMap = mapKeyToValues(filename);
-        HashMap<double, double> finalresultHolder = new HashMap<double, double>();
+        //HashMap<double, double> finalresultHolder = new HashMap<double, double>();
         Set<String> keys = myMap.keySet();
         for (String key: keys){
             String line  = key;
@@ -42,15 +45,15 @@ public class subgraphGraphProcessor{
 
             //System.out.println(Arrays.toString(sourceDestArrayFinal));
             //System.out.println(Arrays.toString(toExcludeArrayFinal));
-            double[] result = estimator.general.lengthDistribution(sourceDestArrayFinal,toExcludeArrayFinal);
+            double[] result = estimator.general.Algorithm2.lengthDistribution(sourceDestArrayFinal,toExcludeArrayFinal);
             System.out.println(result+"RETURNED FROM TOBI");
             double num_of_paths_result = result[0];
             double avglength_result = result[1];
             double num_of_paths = num_of_paths_result * myMap.get(key);
-            double avglength = avglength_tobi + toExcludeArray.length; 
+            double avglength = avglength_result + toExcludeArray.length; 
             final_num_of_paths+=num_of_paths;
             final_avglength += (num_of_paths*avglength);
-            finalresultHolder.put(num_of_paths,avglength);
+            //finalresultHolder.put(num_of_paths,avglength);
         }
         // Set<String> keys2 = finalresultHolder.keySet();
         // double resultVal1;
@@ -86,7 +89,6 @@ public class subgraphGraphProcessor{
         // }
         // //boolean dag = recur.
         // double[] length = estimator.general.Algorithm2.lengthDistribution(list_of_graphs, graph, source, destination);
-    }
 
 
     public static HashMap<String,Integer> mapKeyToValues(String file)
