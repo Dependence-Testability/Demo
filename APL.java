@@ -59,6 +59,12 @@ public class APL {
     }
   }
 
+  private static <T> boolean isDag(Graph<T> graph) {
+    TarjanSCC<T> tarjan = new TarjanSCC<>(graph);
+    List<SCC<T>> sccs = tarjan.getSCCs();
+    return sccs.size() == graph.size();
+  }
+
   private static <T> void decomposeGraph(Graph<T> graph, List<SCC<T>> sccs, Node<T> u, Node<T> v, int presuffix, int trials) {
     for (SCC<T> scc : sccs) {
       for (Node<T> entryNode : scc.getEntryNodes()) {
@@ -70,7 +76,9 @@ public class APL {
             List<Node<T>> nodes = makeSubgraph(subgraph, scc, entryNode, exitNode);
             double[] result = new double[2];
             decomposeCount++;
-            if (decomposeCount % 2 == 0) {
+            boolean isDag = isDag(subgraph);
+
+            if (decomposeCount % 2 == 0 && !isDag) {
               String rep = subgraph.translateToString(entryNode.getValue(), exitNode.getValue(), trials);
               try {
                 File file = new File("subgraph.txt");
@@ -112,29 +120,18 @@ public class APL {
               
             }
 
-            Node<T> x = graph.findEntryNode(entryNode.getValue());
-            Node<T> y = graph.findExitNode(exitNode.getValue());
-
             if (result[0] != 0.0d) {
               if (decomposeCount % 2 != 0) {
                 System.out.println("Erroniously using Tobi's Algorithm");
               }
               graph.addSuperEdge(entryNode, exitNode, result[0], (result[1]*result[0]));
             } else {
-              if (decomposeCount % 2 == 0) {
+              if (decomposeCount % 2 == 0 && !isDag) {
                 System.out.println("Erroniously using Daniel's Algorithm");
               }
               double[] values = APL.computeHelper(subgraph, nodes.get(0), nodes.get(1), presuffix, trials);
               graph.addSuperEdge(entryNode, exitNode, values[0], values[1]);
             }
-            // add edge with value found in APL calculation
-            // double[] values = APL.computeHelper(subgraph, nodes.get(0), nodes.get(1), presuffix, trials);
-            // // System.out.println("Values: " + values[0] + " " + values[1]);
-            // // System.out.println("Adding super edge between " + entryNode + " and " + exitNode);
-
-            // Node<T> x = graph.findEntryNode(entryNode.getValue());
-            // Node<T> y = graph.findExitNode(exitNode.getValue());
-            // graph.addSuperEdge(entryNode, exitNode, values[0], values[1]);
           }
         }
       }
