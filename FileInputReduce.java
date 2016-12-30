@@ -70,30 +70,30 @@ import estimator.general.*;
         prefix_array[0] = pref_suff_array[0];
         suffix_array[0] = pref_suff_array[1];
         
-        permuteAndSplit(prefix_array,suffix_array,toExclude_array,toExclude_array.length);//comb);
+        permuteAndSplit(prefix_array,suffix_array,toExclude_array,toExclude_array.length,context);
        
     }
 
-     public static void permuteAndSplit(int[] prefix_array, int[] suffix_array, int[] toExclude_array, int n){
+     public static void permuteAndSplit(int[] prefix_array, int[] suffix_array, int[] toExclude_array, int n,Context context){
         if (n <= 1) {
             //int m = setB.length;
-            splitSet(prefix_array,suffix_array,toExclude_array);
+            splitSet(prefix_array,suffix_array,toExclude_array,context);
             return;
         }
         for (int i = 0; i < n; i++) {
             swap(toExclude_array, i, n-1);
-            permuteAndSplit(prefix_array,suffix_array,toExclude_array,n-1);
+            permuteAndSplit(prefix_array,suffix_array,toExclude_array,n-1,context);
             swap(toExclude_array, i, n-1);
         } 
     }
 
-     public static void splitSet(int[] prefix_array, int[] suffix_array, int[] toExclude_array){
+     public static void splitSet(int[] prefix_array, int[] suffix_array, int[] toExclude_array,Context context){
         int length = toExclude_array.length;
         int i=0;
         while(i<length-1){
            ArrayList<int[]> splitted = splittedSet(toExclude_array,i);
            try{
-                printPossible(prefix_array,suffix_array,splitted.get(0),splitted.get(1));
+                printPossible(prefix_array,suffix_array,splitted.get(0),splitted.get(1), context);
             }
             catch(Exception e){
                 e.printStackTrace();
@@ -136,7 +136,7 @@ import estimator.general.*;
         }
     } 
 
-    public static void printPossible(int[] prefix_array, int[] suffix_array, int[] setA, int[] setB)
+    public static void printPossible(int[] prefix_array, int[] suffix_array, int[] setA, int[] setB,Context context)
     throws IOException, InterruptedException 
     {
         int[] merge_pref_1 = mergeArray(setA, prefix_array,true);
@@ -144,23 +144,23 @@ import estimator.general.*;
         int[] merged_pref_suf = new int[2];
         merged_pref_suf[0] = prefix_array[0];
         merged_pref_suf[1] = suffix_array[0];
-        System.out.println(Arrays.toString(merged_pref_suf)+ " | "+ Arrays.toString(merge_pref_1) +" : "+ Arrays.toString(merged_suf_1));
+        //System.out.println(Arrays.toString(merged_pref_suf)+ " | "+ Arrays.toString(merge_pref_1) +" : "+ Arrays.toString(merged_suf_1));
 
         if(checkValidPath(merge_pref_1) && checkValidPath(merged_suf_1))
         {
             Text word  = new Text(public_prefSuf+":"+ toExclude_public+":");//use colon as custom delimeter
             IntWritable one = new IntWritable(1);
-            public_context.write(word, one);
+            context.write(word, one);
         }
         int[] merge_pref_2 = mergeArray(setB, prefix_array,true);
         int[] merged_suf_2 = mergeArray(suffix_array,setA,false);
-        System.out.println(Arrays.toString(merged_pref_suf)+ " | "+ Arrays.toString(merge_pref_2) +" : "+ Arrays.toString(merged_suf_2));
+        //System.out.println(Arrays.toString(merged_pref_suf)+ " | "+ Arrays.toString(merge_pref_2) +" : "+ Arrays.toString(merged_suf_2));
 
         if(checkValidPath(merge_pref_2) && checkValidPath(merged_suf_2))
         {
             Text word2  = new Text(public_prefSuf+":"+ toExclude_public+":"); //use colon as custom delimeter
             IntWritable one2 = new IntWritable(1);
-            public_context.write(word2, one2);
+            context.write(word2, one2);
         }
     }
 
@@ -242,17 +242,18 @@ import estimator.general.*;
 
     public static boolean checkValidPath(int[] arr)
     {
-        System.out.println(Arrays.toString(arr));
         if(arr.length>1)
         {
             for (int u = 0; u<arr.length-1; u++)
             {
                 if(!(subGraph.getNode(arr[u]).hasEdge( subGraph.getNode(arr[u+1])))){
-                    System.out.println("edge"+arr[u]+" to "+ arr[u+1]+" not found");
+                   // System.out.println("edge"+arr[u]+" to "+ arr[u+1]+" not found");
                     return false;
                 }
             }
         }
+        System.out.println(Arrays.toString(arr));
+        System.out.println("Valid path!");
         return true;
     }
  	///NExt brackt ends class

@@ -77,7 +77,7 @@ public class PairAndSetGenerator
     {
         //String currentDir = System.getProperty("user.dir");
         //System.out.println("Current dir using System:" +currentDir);
-        File original = new File("sugraph.txt");
+        File original = new File("subgraph.txt");
         Graph<Integer> originalGraph = new Graph<Integer>();
         try
         {
