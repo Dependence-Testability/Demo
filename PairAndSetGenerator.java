@@ -14,8 +14,8 @@ import java.io.*;
 
 import estimator.util.*;
 import estimator.general.*;
-import recur.TarjanSCC;
-import recur.SCC;
+//import recur.TarjanSCC;
+//import recur.SCC;
 
 public class PairAndSetGenerator
 {
@@ -27,35 +27,10 @@ public class PairAndSetGenerator
     
     public static void startGeneration(int prefSufLength, int source, int dest)
     {
-       ArrayList<Integer> verts = new ArrayList<Integer>();
-        Graph<Integer> graph = constructGraph(verts);
-        TarjanSCC<Integer> checker = new TarjanSCC<Integer>(graph);
-        List<SCC<Integer>> sccs = checker.getSCCs();
-        //int[] length;
-        //ArrayList<double> length;
-        if (sccs.size() == graph.size())
-        {
-            System.out.println("GRAPH IS A STRONGLY CONNECTED");            
-            double[] length = estimator.general.PathFinder.dagTraversal(graph, source, dest);
-            try (
-            FileWriter fw = new FileWriter("results.txt", false);
-            BufferedWriter bw = new BufferedWriter(fw);
-            PrintWriter out = new PrintWriter(bw))
-            {
-                String line = "[" + length[0]+", "+ length[1] +"]";
-                System.out.println("=================="+ line + "==============");
-                out.println(line);
-            } 
-            catch (IOException e) 
-            {
-              e.printStackTrace();
-              System.err.println("Error writing to result.txt");    
-            }
-        }
-        else{
+       
+            System.out.println("IN START GENERATION");
             startGenerationUtil(prefSufLength,source,dest);
             //length= estimator.general.Algorithm2.lengthDistribution(list_of_graphs, graph, source, destination);
-        }
        
     }
     public static void startGenerationUtil(int prefSufLength, int source, int dest)
@@ -133,7 +108,7 @@ public class PairAndSetGenerator
 
         return originalGraph;
     }
-    
+
 	public static void generatePairAndSet(int[] verts, int setLength, int source, int dest)
 	{
 		generateCombination(verts,verts.length,2,setLength, source, dest);
