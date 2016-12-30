@@ -16,6 +16,7 @@ public class APL {
 
   private static int decomposeCount = 0;
   private static final Object lock = new Object();
+  private static final int GIVEUP = 8;
 
   public static <T> double[] compute(Graph<T> graph, T u, T v, int presuffix, int trials) {
     String rep = graph.translateOriginal();
@@ -78,7 +79,7 @@ public class APL {
             decomposeCount++;
             boolean isDag = isDag(subgraph);
 
-            if (decomposeCount % 2 == 0 && !isDag) {
+            if (decomposeCount % GIVEUP == 0 && !isDag) {
               String rep = subgraph.translateToString(entryNode.getValue(), exitNode.getValue(), trials);
               try {
                 File file = new File("subgraph.txt");
@@ -121,12 +122,12 @@ public class APL {
             }
 
             if (result[0] != 0.0d) {
-              if (decomposeCount % 2 != 0) {
+              if (decomposeCount % GIVEUP != 0) {
                 System.out.println("Erroniously using Tobi's Algorithm");
               }
               graph.addSuperEdge(entryNode, exitNode, result[0], (result[1]*result[0]));
             } else {
-              if (decomposeCount % 2 == 0 && !isDag) {
+              if (decomposeCount % GIVEUP == 0 && !isDag) {
                 System.out.println("Erroniously using Daniel's Algorithm");
               }
               double[] values = APL.computeHelper(subgraph, nodes.get(0), nodes.get(1), presuffix, trials);
