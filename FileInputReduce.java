@@ -113,6 +113,7 @@ import estimator.general.*;
                     printPossible(prefix_array,suffix_array,splitted.get(0),splitted.get(1), context);
                 }
                 catch(Exception e){
+                    System.out.println("Fam we have an error!");
                     e.printStackTrace();
                 }
                i++;
