@@ -56,12 +56,12 @@ public class testFileInput{
         job.setOutputFormatClass(TextOutputFormat.class);
 
         FileInputFormat.addInputPath(job, new Path("Demo/testOutput.txt"));
-        FileOutputFormat.setOutputPath(job, new Path("DemoReduceOutput"+counter));
+        FileOutputFormat.setOutputPath(job, new Path("DemoReduceOutput"+counter++));
 
         job.waitForCompletion(true);
         if(job.isSuccessful()){
-            subgraphGraphProcessor.initialize("DemoReduceOutput"+counter+"/part-r-00000");
+            subgraphGraphProcessor.initialize("../DemoReduceOutput"+(counter-1)+"/part-r-00000");
         }
-        counter++;
+        //counter++;
     }
 }

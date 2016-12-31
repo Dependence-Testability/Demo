@@ -37,6 +37,8 @@ import estimator.general.*;
         public_context = context;
         ArrayList<Integer> verts = new ArrayList<Integer>();
         subGraph = constructGraph(verts);
+        System.out.println(verts.toString());
+        System.out.println(subGraph.toString());      
         String inputline;
         int[] pref_suff_array = new int[2]; 
         int[] toExclude_array;
@@ -75,6 +77,7 @@ import estimator.general.*;
     }
 
      public static void permuteAndSplit(int[] prefix_array, int[] suffix_array, int[] toExclude_array, int n,Context context){
+        System.out.println("In Permuta And Split");
         if (n <= 1) {
             //int m = setB.length;
             splitSet(prefix_array,suffix_array,toExclude_array,context);
@@ -88,17 +91,32 @@ import estimator.general.*;
     }
 
      public static void splitSet(int[] prefix_array, int[] suffix_array, int[] toExclude_array,Context context){
+        System.out.println("In split Set");
         int length = toExclude_array.length;
         int i=0;
-        while(i<length-1){
-           ArrayList<int[]> splitted = splittedSet(toExclude_array,i);
-           try{
-                printPossible(prefix_array,suffix_array,splitted.get(0),splitted.get(1), context);
+        if(length==0)
+        {
+            //ArrayList<int[]> splitted = splittedSet(toExclude_array,i);
+            int[] arrayA = new int[0];
+            int[] arrayB = new int[0];
+             try{
+                printPossible(prefix_array,suffix_array,arrayA,arrayB, context);
             }
             catch(Exception e){
                 e.printStackTrace();
             }
-           i++;
+        }
+        else{
+            while(i<length-1){
+               ArrayList<int[]> splitted = splittedSet(toExclude_array,i);
+               try{
+                    printPossible(prefix_array,suffix_array,splitted.get(0),splitted.get(1), context);
+                }
+                catch(Exception e){
+                    e.printStackTrace();
+                }
+               i++;
+            }
         }
     }
     public static ArrayList<int[]> splittedSet(int[] toExclude_array,int i)
@@ -139,12 +157,13 @@ import estimator.general.*;
     public static void printPossible(int[] prefix_array, int[] suffix_array, int[] setA, int[] setB,Context context)
     throws IOException, InterruptedException 
     {
+        System.out.println("In printPossible!!!!!!!!!!!!!!");
         int[] merge_pref_1 = mergeArray(setA, prefix_array,true);
         int[] merged_suf_1 = mergeArray(suffix_array,setB,false);
         int[] merged_pref_suf = new int[2];
         merged_pref_suf[0] = prefix_array[0];
         merged_pref_suf[1] = suffix_array[0];
-        //System.out.println(Arrays.toString(merged_pref_suf)+ " | "+ Arrays.toString(merge_pref_1) +" : "+ Arrays.toString(merged_suf_1));
+        System.out.println(Arrays.toString(merged_pref_suf)+ " | "+ Arrays.toString(merge_pref_1) +" : "+ Arrays.toString(merged_suf_1));
 
         if(checkValidPath(merge_pref_1) && checkValidPath(merged_suf_1))
         {
@@ -154,7 +173,7 @@ import estimator.general.*;
         }
         int[] merge_pref_2 = mergeArray(setB, prefix_array,true);
         int[] merged_suf_2 = mergeArray(suffix_array,setA,false);
-        //System.out.println(Arrays.toString(merged_pref_suf)+ " | "+ Arrays.toString(merge_pref_2) +" : "+ Arrays.toString(merged_suf_2));
+        System.out.println(Arrays.toString(merged_pref_suf)+ " | "+ Arrays.toString(merge_pref_2) +" : "+ Arrays.toString(merged_suf_2));
 
         if(checkValidPath(merge_pref_2) && checkValidPath(merged_suf_2))
         {
@@ -198,6 +217,7 @@ import estimator.general.*;
 
     public static Graph constructGraph(ArrayList<Integer> verts)
     {
+        System.out.println("In Constructgraph");
         Graph<Integer> subGraph = new Graph<Integer>();
         try
         {
@@ -242,18 +262,19 @@ import estimator.general.*;
 
     public static boolean checkValidPath(int[] arr)
     {
+        System.out.println("In CHECKVALIDPATH");
         if(arr.length>1)
         {
             for (int u = 0; u<arr.length-1; u++)
             {
                 if(!(subGraph.getNode(arr[u]).hasEdge( subGraph.getNode(arr[u+1])))){
-                   // System.out.println("edge"+arr[u]+" to "+ arr[u+1]+" not found");
+                    System.out.println("edge"+arr[u]+" to "+ arr[u+1]+" not found");
                     return false;
                 }
             }
         }
-        System.out.println(Arrays.toString(arr));
-        System.out.println("Valid path!");
+        // System.out.println(Arrays.toString(arr));
+        System.out.println("Valid path in array: " +Arrays.toString(arr));
         return true;
     }
  	///NExt brackt ends class
