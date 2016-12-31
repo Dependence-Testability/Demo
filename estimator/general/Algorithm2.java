@@ -42,6 +42,8 @@ public class Algorithm2 {
     Scanner scan = null;
     try {
       scan = new Scanner(subgraphFile);
+      scan.nextLine();
+      scan.nextLine();
       while (scan.hasNextLine()) {
 	String[] adjacents = scan.nextLine().split(" ");
 	int origin = Integer.parseInt(adjacents[0]);
