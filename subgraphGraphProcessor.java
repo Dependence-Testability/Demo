@@ -13,8 +13,8 @@ public class subgraphGraphProcessor{
     public static int num_of_trials; ///not used at all rn
     public static int source;
     public static int destination;
-    public static int final_num_of_paths;
-    public static int final_avglength;
+    public static double final_num_of_paths;
+    public static double final_avglength;
 
     //for testing purposes only
     public static void main (String args[]){
@@ -32,21 +32,26 @@ public class subgraphGraphProcessor{
             String[] lineArray = line.split(":");
             String[] sourceDestArray =  lineArray[0].replace(']',' ').replace('[',' ').trim().split(",");
             String[] toExcludeArray =  lineArray[1].replace(']',' ').replace('[',' ').trim().split(",");
+            System.out.println("Source and destination are: " + Arrays.toString(sourceDestArray));
+            System.out.println(Arrays.toString(toExcludeArray));
             int[] sourceDestArrayFinal = new int[sourceDestArray.length];
             int[] toExcludeArrayFinal = new int[toExcludeArray.length];
             for (int i = 0;i< sourceDestArray.length;i++)
             {
                 sourceDestArrayFinal[i] = Integer.parseInt(sourceDestArray[i].trim());
             }
-            for (int j = 0;j< toExcludeArray.length;j++)
-            {
-                toExcludeArrayFinal[j] = Integer.parseInt(toExcludeArray[j].trim());
+            System.out.println(toExcludeArray.length);
+            if(toExcludeArray.length>0 && !(toExcludeArray[0].equals(""))){
+                for (int j = 0;j< toExcludeArray.length;j++)
+                {
+                    toExcludeArrayFinal[j] = Integer.parseInt(toExcludeArray[j].trim());
+                }
             }
 
             //System.out.println(Arrays.toString(sourceDestArrayFinal));
             //System.out.println(Arrays.toString(toExcludeArrayFinal));
             double[] result = estimator.general.Algorithm2.lengthDistribution(sourceDestArrayFinal,toExcludeArrayFinal);
-            System.out.println(result+"RETURNED FROM TOBI");
+            System.out.println(Arrays.toString(result)+" RETURNED FROM TOBI");
             double num_of_paths_result = result[0];
             double avglength_result = result[1];
             double num_of_paths = num_of_paths_result * myMap.get(key);
@@ -62,17 +67,33 @@ public class subgraphGraphProcessor{
         //     resultVal1+=num;
         //     resultVal2+= (num* finalresultHolder.get(num));
         // }
-        try (
+        if(final_num_of_paths==0.0){
+            try (
+               FileWriter fw = new FileWriter("results.txt", false);
+                BufferedWriter bw = new BufferedWriter(fw);
+                PrintWriter out = new PrintWriter(bw))
+            {
+                String line = "[" + final_num_of_paths+", "+ final_num_of_paths +"]";
+                System.out.println("=================="+ line + "==============");
+                out.println(line);
+            } catch (IOException e) {
+              e.printStackTrace();
+              System.err.println("Error writing to result.txt");    
+            }
+        }
+        else{
+            try (
            FileWriter fw = new FileWriter("results.txt", false);
             BufferedWriter bw = new BufferedWriter(fw);
             PrintWriter out = new PrintWriter(bw))
-        {
-            String line = "[" + final_num_of_paths+", "+ (final_avglength/final_num_of_paths) +"]";
-            System.out.println("=================="+ line + "==============");
-            out.println(line);
-        } catch (IOException e) {
-          e.printStackTrace();
-          System.err.println("Error writing to result.txt");    
+            {
+                String line = "[" + final_num_of_paths+", "+ (final_avglength/final_num_of_paths) +"]";
+                System.out.println("=================="+ line + "==============");
+                out.println(line);
+            } catch (IOException e) {
+              e.printStackTrace();
+              System.err.println("Error writing to result.txt");    
+            }
         }
     }
 

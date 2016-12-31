@@ -26,7 +26,7 @@ import estimator.general.*;
  public static int init_source;
     public static int init_dest;
     public static Graph<Integer> subGraph;
-    public static Context public_context;
+    //public static Context public_context;
     public static String public_prefSuf;
     public static String toExclude_public;
 
@@ -249,7 +249,7 @@ import estimator.general.*;
                 }
             }
             br.close();
-            fs.close();
+            //fs.close();
         }
         catch(Exception e)
         {
